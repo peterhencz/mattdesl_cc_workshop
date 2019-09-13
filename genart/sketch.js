@@ -1,21 +1,70 @@
 const canvasSketch = require("canvas-sketch");
+const { lerp } = require("canvas-sketch-util/math");
+const random = require("canvas-sketch-util/random");
+const palettes = require("nice-color-palettes");
 
 const settings = {
-  dimensions: "A3",
-  pixelsPerInch: 300,
+  dimensions: [2048, 2048],
 };
 
 const sketch = () => {
+  // colorCount = random.rangeFloor(1, 6);
+  // const palette = random.shuffle(random.pick(palettes)).slice(0, colorCount);
+  // console.log(palette);
+
+  const palette = ["#f18f01", "#048ba8", "#2e4057", "#99c24d", "#2f2d2e"];
+  const createGrid = () => {
+    const points = [];
+    const count = 35;
+    for (let x = 0; x < count; x++) {
+      for (let y = 0; y < count; y++) {
+        const u = count <= 1 ? 0.5 : x / (count - 1);
+        const v = count <= 1 ? 0.5 : y / (count - 1);
+        const radius = Math.abs(random.noise2D(u, v)) * 0.1;
+        points.push({
+          color: random.pick(palette),
+          radius,
+          position: [u, v],
+        });
+      }
+    }
+    return points;
+    console.log(u, v);
+  };
+
+  // random.setSeed(512);
+  const points = createGrid().filter(() => random.value() > 0.2);
+  const margin = 250;
+
   return ({ context, width, height }) => {
-    context.fillStyle = "#f4baba";
+    context.fillStyle = "white";
     context.fillRect(0, 0, width, height);
-    context.beginPath();
-    context.arc(width / 2, height / 2, width * 0.3, 0, Math.PI * 1.618, false);
-    context.fillStyle = "tomato";
-    context.fill();
-    context.lineWidth = width * 0.3;
-    context.strokeStyle = "salmon";
-    context.stroke();
+
+    points.forEach(data => {
+      const { position, radius, color } = data;
+
+      const [u, v] = position;
+      const x = lerp(margin, width - margin, u);
+      const y = lerp(margin, height - margin, v);
+
+      context.beginPath();
+      context.arc(
+        x,
+        y,
+        (radius * width) / 1.2,
+        0,
+        Math.PI * random.value(),
+        false
+      );
+
+      // context.strokeStyle = color;
+      // context.lineWidth = 5;
+      // context.stroke();
+
+      // context.fillStyle = color;
+      // context.font = `&{100px, "Helvetica"}`;
+      // context.fillText("A", x, y);
+    });
   };
 };
 
