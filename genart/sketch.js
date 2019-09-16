@@ -20,10 +20,11 @@ const sketch = () => {
       for (let y = 0; y < count; y++) {
         const u = count <= 1 ? 0.5 : x / (count - 1);
         const v = count <= 1 ? 0.5 : y / (count - 1);
-        const radius = Math.abs(random.noise2D(u, v)) * 0.1;
+        const radius = Math.abs(random.noise2D(u, v)) * 0.02;
         points.push({
           color: random.pick(palette),
           radius,
+          rotation: random.noise2D(u, v) * 0.5,
           position: [u, v],
         });
       }
@@ -33,7 +34,7 @@ const sketch = () => {
   };
 
   // random.setSeed(512);
-  const points = createGrid().filter(() => random.value() > 0.2);
+  const points = createGrid().filter(() => random.value() > 0.5);
   const margin = 250;
 
   return ({ context, width, height }) => {
@@ -41,7 +42,7 @@ const sketch = () => {
     context.fillRect(0, 0, width, height);
 
     points.forEach(data => {
-      const { position, radius, color } = data;
+      const { position, radius, color, rotation } = data;
 
       const [u, v] = position;
       const x = lerp(margin, width - margin, u);
@@ -61,9 +62,13 @@ const sketch = () => {
       // context.lineWidth = 5;
       // context.stroke();
 
-      // context.fillStyle = color;
-      // context.font = `&{100px, "Helvetica"}`;
-      // context.fillText("A", x, y);
+      context.save();
+      context.fillStyle = color;
+      context.font = `${radius * width}px "Helvetica"`;
+      context.translate(x, y);
+      context.rotate(rotation);
+      context.fillText("…  ………  `/        ¬°           +      +", 0, 0);
+      context.restore();
     });
   };
 };
