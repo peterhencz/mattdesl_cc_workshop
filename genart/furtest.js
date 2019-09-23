@@ -52,14 +52,14 @@ const sketch = () => {
       const y = lerp(margin, height - margin, v);
 
       context.save();
-      context.fillStyle = color;
+      context.fillStyle = "#333";
       context.font = `${radius * width}px "Arial"`;
       context.translate(x, y);
       context.rotate(rotation);
       context.beginPath();
       context.bezierCurveTo(100, 200, 3, 400, 50, 60, 70, 80);
       context.lineWidth = (radius * width) / 100;
-      context.strokeStyle = color;
+      context.strokeStyle = "#333";
       context.stroke();
       context.restore();
     });
