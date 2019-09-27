@@ -9,6 +9,9 @@ const random = require("canvas-sketch-util/random");
 
 const settings = {
   // Make the loop animated
+  dimension: [512, 512],
+  fps: 24,
+  duration: 4,
   animate: true,
   // Get a WebGL canvas rather than 2D
   context: "webgl",
@@ -58,7 +61,7 @@ const sketch = ({ context }) => {
 
   scene.add(new THREE.AmbientLight("purple"));
   const light = new THREE.DirectionalLight("white", 1);
-  light.position.set(0, 0, 4);
+  light.position.set(4, 1, 1);
   scene.add(light);
 
   // draw each frame
@@ -91,7 +94,9 @@ const sketch = ({ context }) => {
       camera.updateProjectionMatrix();
     },
     // Update & render your scene here
-    render({ time }) {
+    render({ playhead }) {
+      scene.rotation.y = playhead * Math.PI * 2;
+      scene.rotation.x = playhead * Math.PI * 2;
       renderer.render(scene, camera);
     },
     // Dispose of events & renderer for cleaner hot-reloading

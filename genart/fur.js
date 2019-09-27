@@ -8,24 +8,27 @@ random.setSeed(random.getRandomSeed());
 
 const settings = {
   suffix: random.getSeed(),
-  dimensions: [2048, 2048],
+  dimensions: [512, 512],
+  animate: true,
+  duration: 4,
+  fps: 30,
 };
 console.log(random.getSeed());
 
 const sketch = () => {
-  const palette = ["#f18f01", "#048ba8", "#2e4010", "#2f2d2e"];
+  const palette = ["#ddd", "#ccc"];
   const createGrid = () => {
     const points = [];
-    const count = 545;
+    const count = 145;
     for (let x = 0; x < count; x++) {
       for (let y = 0; y < count; y++) {
         const u = count <= 1 ? 0.5 : x / (count - 1);
         const v = count <= 1 ? 0.5 : y / (count - 1);
-        const radius = Math.abs(random.noise2D(u, v)) * 0.02;
+        const radius = Math.abs(random.noise2D(u, v)) * 0.03;
         points.push({
           color: random.pick(palette),
           radius,
-          rotation: random.noise2D(u, v) * 0.618,
+          rotation: random.noise2D(u, v) * 3.618,
           position: [u, v],
         });
       }
@@ -35,16 +38,16 @@ const sketch = () => {
   };
 
   // random.setSeed(512);
-  const points = createGrid().filter(() => random.value() > 0.8);
-  const margin = 250;
+  const points = createGrid().filter(() => random.value() > 0.84);
+  const margin = 10;
 
-  return ({ context, width, height }) => {
+  return ({ context, width, height, playhead }) => {
     context.fillStyle = "#333";
     context.fillRect(0, 0, width, height);
 
     points.forEach(data => {
       const { position, radius, color, rotation } = data;
-
+      const t = Math.sin(playhead * Math.PI * 2);
       const [u, v] = position;
       const x = lerp(margin, width - margin, u);
       const y = lerp(margin, height - margin, v);
@@ -53,23 +56,14 @@ const sketch = () => {
       context.fillStyle = color;
       context.font = `${radius * width}px "Arial"`;
       context.translate(x, y);
-      context.rotate(rotation);
+      context.rotate((rotation * t) / 2);
       context.beginPath();
 
       // context.lineWidth = (radius * width) / 200;
       context.strokeStyle = "#ddd";
 
-      context.bezierCurveTo(
-        radius * 3,
-        100,
-        10,
-        radius,
-        Math.cos(30 * Math.PI),
-        radius * 10,
-        200,
-        300
-      );
-      context.lineWidth = (radius * width) / 200;
+      context.bezierCurveTo(10, 20, 30, 100, 10, 10, 10, 10);
+      context.lineWidth = (radius * width) / 80;
       context.strokeStyle = color;
       context.stroke();
       context.restore();

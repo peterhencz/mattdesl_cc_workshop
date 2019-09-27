@@ -14,7 +14,7 @@ const settings = {
 console.log(random.getSeed());
 
 const sketch = () => {
-  const palette = ["#ccc", "#999", "#ddd", "tomato"];
+  const palette = ["#c#999", ];
 
   const createGrid = () => {
     const points = [];
