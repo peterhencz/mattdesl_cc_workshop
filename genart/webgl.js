@@ -26,42 +26,43 @@ const sketch = ({ context }) => {
   });
 
   // WebGL background color
-  renderer.setClearColor("#999", 1);
+  renderer.setClearColor("#666", 1);
 
   // Setup a camera
   const camera = new THREE.OrthographicCamera();
-
+  const controls = new THREE.OrbitControls(camera);
   // Setup your scene
   const scene = new THREE.Scene();
 
-  const palette = ["#f18f01", "#048ba8", "#2e4057", "#99c24d", "#2f2d2e"];
+  const palette = ["#f4baba"];
 
   const box = new THREE.BoxGeometry(1, 1, 1);
-  for (let i = 0; i < 40; i++) {
+  for (let i = 0; i < 10; i++) {
     const mesh = new THREE.Mesh(
       box,
       new THREE.MeshStandardMaterial({
         color: random.pick(palette),
       })
     );
+    const cica = random.noise2D(1, 3, 4) * 4;
     mesh.position.set(
-      random.range(-1, 1),
-      random.range(-1, 1),
-      random.range(-1, 1)
+      random.range(-cica, cica),
+      random.range(-cica, cica),
+      random.range(-cica, cica)
     );
 
     mesh.scale.set(
-      random.range(-1, 1),
-      random.range(-1, 1),
-      random.range(-1, 1)
+      random.range(-cica, cica),
+      random.range(-cica, cica),
+      random.range(-cica, cica)
     );
-    mesh.scale.multiplyScalar(0.5);
+    mesh.scale.multiplyScalar(1);
     scene.add(mesh);
   }
 
   scene.add(new THREE.AmbientLight("purple"));
-  const light = new THREE.DirectionalLight("white", 1);
-  light.position.set(4, 1, 1);
+  const light = new THREE.DirectionalLight("pink", 1);
+  light.position.set(1, 4, 1);
   scene.add(light);
 
   // draw each frame
@@ -74,7 +75,7 @@ const sketch = ({ context }) => {
       const aspect = viewportWidth / viewportHeight;
 
       // Ortho zoom
-      const zoom = 2;
+      const zoom = 4;
 
       // Bounds
       camera.left = -zoom * aspect;
@@ -95,8 +96,8 @@ const sketch = ({ context }) => {
     },
     // Update & render your scene here
     render({ playhead }) {
-      scene.rotation.y = playhead * Math.PI * 2;
-      scene.rotation.x = playhead * Math.PI * 2;
+      scene.rotation.y = Math.cos(playhead * Math.PI * 2);
+      controls.update();
       renderer.render(scene, camera);
     },
     // Dispose of events & renderer for cleaner hot-reloading
