@@ -34,10 +34,10 @@ const frag = glsl(/* glsl */ `
     // vec3 color = mix(colorA - cos(time), colorB, vUv.y + vUv.x * cos(time));
     // gl_FragColor = vec4(sin(color), alpha);
 
-    float n = noise(vec3(center * 0.5, sin(time) * 0.5));
+    float n = noise(vec3(center * 2.0, cos(time) * 0.5));
 
     vec3 color = hsl2rgb(
-      0.01 + sin(n) * 2.0, 0.5, 0.5
+      0.5 + sin(n) * 0.058, 0.5, 0.5
       );
 
     gl_FragColor = vec4(color, alpha);
