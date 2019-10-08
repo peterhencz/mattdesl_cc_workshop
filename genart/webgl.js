@@ -36,27 +36,35 @@ const sketch = ({ context }) => {
 
   const palette = ["#f4baba"];
 
-  const box = new THREE.BoxGeometry(1, 1, 1);
+  const box = new THREE.ParametricGeometry(
+    THREE.ParametricGeometries.klein,
+    25,
+    25
+  );
   for (let i = 0; i < 10; i++) {
     const mesh = new THREE.Mesh(
       box,
-      new THREE.MeshStandardMaterial({
+      new THREE.ShaderMaterial({
+        fragmentShader: `
+        void main() {
+          gl_FragColor = vec4(0.5, 0.3, 0.5, 1.0);
+        }`,
         color: random.pick(palette),
       })
     );
-    const cica = random.noise2D(1, 3, 4) * 4;
+
     mesh.position.set(
-      random.range(-cica, cica),
-      random.range(-cica, cica),
-      random.range(-cica, cica)
+      random.range(-1, 1),
+      random.range(-1, 1),
+      random.range(-1, 1)
     );
 
     mesh.scale.set(
-      random.range(-cica, cica),
-      random.range(-cica, cica),
-      random.range(-cica, cica)
+      random.range(-1, 1),
+      random.range(-1, 1),
+      random.range(-1, 1)
     );
-    mesh.scale.multiplyScalar(1);
+    mesh.scale.multiplyScalar(0.5);
     scene.add(mesh);
   }
 
