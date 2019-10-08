@@ -17,17 +17,17 @@ const frag = glsl(/* glsl */ `
   varying vec2 vUv;
 
   void main () {
-    vec3 colorA = cos(time) + vec3(0.8, 0.4, 0.4);
-    vec3 colorB = vec3(0.35, 0.4, 0.5);
+    vec3 colorA = vec3(0.8, 0.4, 0.4);
+    vec3 colorB = vec3(0.35 + sin(time), 0.4, 0.5);
 
     vec2 center = vUv - 0.5;
     center.x *= aspect;
     float dist = length(center);
 
-    float alpha = smoothstep(0.51, 0.1, dist);
+    float alpha = smoothstep(0.4, 0.21, dist);
 
-    vec3 color = mix(colorA, colorB, vUv.y + vUv.x * cos(time));
-    gl_FragColor = vec4(color, alpha);
+    vec3 color = mix(colorA - cos(time), colorB, vUv.y + vUv.x * cos(time));
+    gl_FragColor = vec4(sin(color), alpha);
   }
 `);
 
@@ -35,7 +35,7 @@ const frag = glsl(/* glsl */ `
 const sketch = ({ gl }) => {
   // Create the shader and return it
   return createShader({
-    clearColor: "white",
+    clearColor: "#ddd",
     // Pass along WebGL context
     gl,
     // Specify fragment and/or vertex shader strings
