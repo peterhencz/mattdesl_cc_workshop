@@ -29,7 +29,7 @@ const frag = glsl(/* glsl */ `
 
     float dist = length(center);
 
-    float alpha = smoothstep(0.4, 0.395, dist);
+    float alpha = smoothstep(0.9, 0.395, dist);
 
     // vec3 color = mix(colorA - cos(time), colorB, vUv.y + vUv.x * cos(time));
     // gl_FragColor = vec4(sin(color), alpha);
@@ -37,7 +37,7 @@ const frag = glsl(/* glsl */ `
     float n = noise(vec3(center * 2.0, cos(time) * 0.5));
 
     vec3 color = hsl2rgb(
-      0.5 + sin(n) * 0.058, 0.5, 0.5
+      0.2 + cos(n) * 0.58, 0.5, 0.5
       );
 
     gl_FragColor = vec4(color, alpha);
